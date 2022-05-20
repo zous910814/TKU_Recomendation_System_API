@@ -1,8 +1,5 @@
-import torch
-import sys
-sys.path.append("/main.py")
-from main import NFM,DNN,BiInteractionPooling,DenseFeat,SparseFeat
+import pandas as pd
 
+df = pd.read_csv("./tkudata/學生資料/1-3學生各科成績(期中).csv")
 
-model = torch.load("./data/NFM.pth")
-print()
+print(df[df['req_ele_type']=="C"]['ch_cos_name'].nunique())
