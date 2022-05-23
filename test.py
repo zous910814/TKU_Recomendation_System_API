@@ -1,5 +1,12 @@
-import pandas as pd
+import json
 
-df = pd.read_csv("./tkudata/學生資料/1-3學生各科成績(期中).csv")
+with open('./database/ndf107.json', 'r', encoding="utf-8") as f:
+    data = json.load(f)
 
-print(df[df['req_ele_type']=="C"]['ch_cos_name'].nunique())
+with open('./database/ndf107course.json', 'r', encoding="utf-8") as f:
+    datac = json.load(f)
+
+
+print(datac['data'][0] =={"course":"數位藝術與人機互動"})
+print(len(datac['data']))
+print(data['data'][0]['course'] == '數位檔案管理')
