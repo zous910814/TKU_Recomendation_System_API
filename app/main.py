@@ -1,6 +1,6 @@
 from app import app
 from flask import request
-from app.model import rs_model, rs_nfm
+from app.model import rs_nfm
 
 
 @app.route('/')
@@ -31,5 +31,4 @@ def rscourse():
         return result
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
