@@ -3,5 +3,4 @@ gunicorn
 pandas
 sklearn
 deepctr_torch
-sqlite3
 torch
