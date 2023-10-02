@@ -5,9 +5,8 @@ from deepctr_torch.models import NFM
 from sklearn.preprocessing import LabelEncoder
 import sqlite3
 
-con = sqlite3.connect('database/database.sqlite', check_same_thread=False)
+con = sqlite3.connect('database/database.sqlite', check_same_thread = False)
 cur = con.cursor()
-
 
 def get_course_id(course: dict) -> int:
     df = pd.read_sql("SELECT * FROM ndf107course", con)
@@ -16,7 +15,6 @@ def get_course_id(course: dict) -> int:
     num = str(num).replace("]", "")
     return int(num)
 
-
 def input_course_id(num: int):
     df = pd.read_sql("SELECT * FROM choose_course_num", con)
     data = pd.read_sql("SELECT * FROM ndf107sparsefeat", con)
@@ -24,8 +22,7 @@ def input_course_id(num: int):
     df = df.append(data)
     df = df.drop_duplicates()
     df = df.reset_index(drop=True)
-    df.to_sql("choose_course_num", con, if_exists='replace', index=False)
-
+    df.to_sql("choose_course_num", con, if_exists = 'replace', index = False)
 
 def rs_nfm():
     data = pd.read_sql("SELECT * FROM ndf107T", con)
@@ -45,13 +42,13 @@ def rs_nfm():
     feature_names = get_feature_names(linear_feature_columns + dnn_feature_columns)
     test = pd.read_sql("SELECT * FROM choose_course_num", con)
 
-    test_model_input = {name: test[name] for name in feature_names}
+    test_model_input = { name: test[name] for name in feature_names }
 
-    model = NFM(linear_feature_columns, dnn_feature_columns, task='regression', device="cuda")
+    model = NFM(linear_feature_columns, dnn_feature_columns, task = 'regression', device = "cuda")
     model.load_state_dict(torch.load("database/NFM/NFM500.h5"))
     model.eval()
 
-    pred_ans = model.predict(test_model_input, batch_size=256)
+    pred_ans = model.predict(test_model_input, batch_size = 256)
     pred_ans = str(pred_ans).replace('[', "")
     pred_ans = str(pred_ans).replace(']', '')
     pred_ans = str(pred_ans).replace('\n', ' ')
@@ -59,13 +56,11 @@ def rs_nfm():
 
     return pred_ans_list
 
-
 def round_rs_num(rs_nfm):
     int_rs_num_list = []
     for i in range(len(rs_nfm)):
         int_rs_num_list.append(round(float(rs_nfm[i])))
     return int_rs_num_list
-
 
 def print_rs_course(round_rs_num):
     data = pd.read_sql("SELECT * FROM ndf107course", con)
@@ -80,9 +75,8 @@ def print_rs_course(round_rs_num):
 
     cd = {}
     for i, j in enumerate(cl):
-        cd.update({'course{0}'.format(i): j})
+        cd.update({ 'course{0}'.format(i): j })
     return cd
-
 
 def all_course() -> dict:
     cl = cur.execute("SELECT * FROM ndf107course").fetchall()
@@ -97,14 +91,13 @@ def all_course() -> dict:
 
     cs = {}
     for i, j in enumerate(cl_list):
-        cs.update({'course{0}'.format(i): j})
+        cs.update({ 'course{0}'.format(i): j })
     return cs
-
 
 if __name__ == "__main__":
     a = rs_nfm()
     # b = input_course_id(78)
     c = round_rs_num(a)
     d = print_rs_course(c)
-    # e = get_course_id({"course": '觀光德語'})
+    # e = get_course_id({ "course": '觀光德語' })
     print(d)

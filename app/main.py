@@ -2,21 +2,18 @@ from app import app
 from flask import request
 from app.model import rs_nfm
 
-
 @app.route('/')
 def index():
     return 'Welcome To TKU Recommendation System API'
 
-
-@app.route('/course', methods=['GET'])
+@app.route('/course', methods = ['GET'])
 def course():
     if request.method == 'GET':
         return rs_nfm.all_course()
     else:
         return "NOT FOUND 405"
 
-
-@app.route('/rscourse', methods=['POST'])
+@app.route('/rscourse', methods = ['POST'])
 def rscourse():
     if request.is_json:
         d = request.get_json()
@@ -27,8 +24,5 @@ def rscourse():
         prc = rs_nfm.print_rs_course(rrn)
         return prc
     else:
-        result = 'Not JSON Data'
+        result = 'Not JSON data'
         return result
-
-
-
